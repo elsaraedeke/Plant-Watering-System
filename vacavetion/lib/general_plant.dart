@@ -25,7 +25,16 @@ class GeneralPlant {
       'percentMoisture': percentMoisture,
       'lastWatered': lastWatered
     };
-
-
   }
+
+  void updateMoisture(int newMoisture) {
+    percentMoisture = newMoisture;
+  }
+
+  void water() {
+    lastWatered = DateTime.now();
+    // also request to update moisture levels
+  }
+
+
 }

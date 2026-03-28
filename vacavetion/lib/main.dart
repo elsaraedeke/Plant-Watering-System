@@ -104,18 +104,68 @@ class _HomeState extends State<Home> {
                 children: [
                   if (box.get("plants") != null)
                     for (var p in List.from(box.get("plants")))
-                      Container(
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content:
+                              SizedBox(
+                                height: 500,
+                              child: Column(
+
+                                children: [
+                                  Icon(
+                                    Icons.grass,
+                                    color: Colors.green,
+                                    size: 150.0,
+                                  ),
+                                  Text(p['name'],
+                                  style: TextStyle(fontSize: 50)),
+                                  Text(p['percentMoisture'].toString() + "%",
+                                      style: TextStyle(fontSize: 30)),
+                                  Text(p['lastWatered'].month.toString() + "/" + p['lastWatered'].day.toString()+ " " + p['lastWatered'].hour.toString() + ":" + p['lastWatered'].minute.toString(),
+                                      style: TextStyle(fontSize: 30)),
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        var listPlants = List.from(box.get("plants") ?? []);
+                                        listPlants.removeWhere((plant) => plant['name'] == p['name']);
+                                        box.put("plants", listPlants);
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Delete")
+                                  )
+                                ],
+                              )
+                              )
+                            )
+                          );
+                        },
+
+                      child: Container(
                           padding: const EdgeInsets.all(8),
-                          color: Colors.teal[100],
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                              color: Color.fromRGBO(179, 235, 159, 100),
+                              border: Border.all(
+                              color: Color.fromRGBO(126, 182, 105, 100)
+                            )
+                          ),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: [
+                                Icon(
+                                  Icons.grass,
+                                  color: Colors.green,
+                                  size: 80.0,
+                                ),
                                 Text(p['name']),
                                 Text(p['percentMoisture'].toString() + "%"),
                                 Text(p['lastWatered'].month.toString() + "/" + p['lastWatered'].day.toString()+ " " + p['lastWatered'].hour.toString() + ":" + p['lastWatered'].minute.toString())
                               ]
                           )
+                      )
                       )
                 ]
               )
