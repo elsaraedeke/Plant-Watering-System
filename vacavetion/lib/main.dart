@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'general_plant.dart';
 
 
 
@@ -13,6 +14,10 @@ Future main() async {
   await Hive.initFlutter();
   await Hive.openBox(hiveBox);
   final box = Hive.box(hiveBox);
+
+  if (!box.containsKey("plants")) {
+    box.put("plants", List<Map<String, dynamic>>);
+  }
 
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MaterialApp(home: Main()));
@@ -77,49 +82,105 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final box = Hive.box(hiveBox);
+  final TextEditingController _controller = TextEditingController();
 
   Widget build(BuildContext context) {
 
-    return GridView.count(
-      primary: false,
-      padding: const EdgeInsets.all(20),
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      crossAxisCount: 2,
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[100],
-          child: const Text("He'd have you all unravel at the"),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[200],
-          child: const Text('Heed not the rabble'),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[300],
-          child: const Text('Sound of screams but the'),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[400],
-          child: const Text('Who scream'),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[500],
-          child: const Text('Revolution is coming...'),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          color: Colors.teal[600],
-          child: const Text('Revolution, they...'),
-        ),
-      ],
+    return ValueListenableBuilder(
+        valueListenable: box.listenable(),
+        builder: (context, box, child) { return SizedBox(
+        height: MediaQuery.of(context).size.height * 0.8,
+        child: Column(
+          children: [
+            Expanded(
+              child: GridView.count(
+                shrinkWrap: true,
+                primary: false,
+                padding: const EdgeInsets.all(20),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                crossAxisCount: 2,
+                children: [
+                  if (box.get("plants") != null)
+                    for (var p in List.from(box.get("plants")))
+                      Container(
+                          padding: const EdgeInsets.all(8),
+                          color: Colors.teal[100],
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(p['name']),
+                                Text(p['percentMoisture'].toString() + "%"),
+                                Text(p['lastWatered'].month.toString() + "/" + p['lastWatered'].day.toString()+ " " + p['lastWatered'].hour.toString() + ":" + p['lastWatered'].minute.toString())
+                              ]
+                          )
+                      )
+                ]
+              )
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  box.get("plants");
+                  showDialog(
+                    context: context,
+                      builder: (context) => AlertDialog(  // CHANGE child: to builder: (context) =>
+                        title: const Text('Add Plant'),
+                        content: TextField(
+                          controller: _controller,
+                          autofocus: true,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter plant name',
+                          ),
+                          onSubmitted: (value) {
+                            print("\n\n\n ON SUBMITTED \n\n\n");
+                            if(value.trim().isEmpty) return;
+                            GeneralPlant p = GeneralPlant(value);
+                            print("\n\n\n RUNNING \n\n\n");
+                            var listPlants = box.get("plants");
+                            print("\n\n\n RUNNING2 \n\n\n");
+                            listPlants ??= <Map<String, dynamic>>[];
+                            listPlants.add(p.createPlant());
+                            box.put("plants", listPlants);
+                            _controller.clear();
+                            Navigator.pop(context);
+                            print("\n\n\n CLOSED TEXT BOX \n\n\n");
+
+                          },
+                        ),
+                      )
+                  );
+                },
+                child: Icon(Icons.add),
+            )
+          ]
+        )
+        );
+        }
     );
+
   }
+
+  /*
+  children: <Widget>[
+        new TextField(
+          controller: _controller,
+          decoration: new InputDecoration(
+            hintText: 'Type something',
+          ),
+        ),
+        new RaisedButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              child: new AlertDialog(
+                title: new Text('What you typed'),
+                content: new Text(_controller.text),
+              ),
+            );
+          },
+   */
 }
 
 
