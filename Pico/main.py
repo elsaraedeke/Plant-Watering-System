@@ -1,7 +1,8 @@
 from machine import Pin, I2C, ADC
 from picobricks import SSD1306_I2C
 import time
-import dht
+import json
+
 
 i2c = I2C(0, sda=Pin(4), scl=Pin(5), freq=400000)
 
@@ -14,7 +15,6 @@ sensor = ADC(Pin(27))
 relay = Pin(12, Pin.OUT)
 
 while True:
-    
     oled.fill(0)
     oled.text("Plant 1: ", 0, 0)
 
@@ -23,17 +23,17 @@ while True:
     oled.text("Moisture: ", 0, 20)
     oled.text(str(raw_value), 80, 20)
 
-    print(raw_value)
-
     #pump
     oled.text("Watering: ", 0, 40)
-    if (raw_value < 13000): 
+    if (raw_value > 12000): 
         relay.value(1)
         oled.text("On", 80, 40)
+        oled.show()
+        time.sleep(2)
     else:
         relay.value(0)
         oled.text("Off", 80, 40)
-    #include boolean if pump is on
+        oled.show()
+        time.sleep(2)
 
-    oled.show()
-    time.sleep(5)
+    
