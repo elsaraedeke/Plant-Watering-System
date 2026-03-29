@@ -22,6 +22,8 @@ while True:
     oled.text("Moisture: ", 0, 20)
     oled.text(str(raw_value), 80, 20)
 
+    print(raw_value)
+
     #pump
     oled.text("Watering: ", 0, 40)
     if (raw_value < 13000): 

@@ -1,5 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 
 class GeneralPlant {
@@ -27,8 +29,24 @@ class GeneralPlant {
     };
   }
 
-  void updateMoisture(int newMoisture) {
-    percentMoisture = newMoisture;
+  Future<void> updateMoisture() async {
+    var data = await fetchSensorData();
+    percentMoisture = data;
+  }
+
+  static Future<int> fetchSensorData() async{
+    final url = Uri.parse('http://192.69.152.190:5000/data');
+
+    final response = await http.get(url);
+
+    if(response.statusCode == 200){
+      final data = jsonDecode(response.body);
+      return data['analog'];
+    }
+
+    return -1;
+
+
   }
 
   void water() {

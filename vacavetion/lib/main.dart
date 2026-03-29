@@ -108,7 +108,17 @@ class _HomeState extends State<Home> {
                   if (box.get("plants") != null)
                     for (var p in List.from(box.get("plants")))
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
+                          final analog = await GeneralPlant.fetchSensorData();
+                          var lst = List.from(box.get("plants"));
+
+                          int idx = lst.indexWhere((plant) => plant['name'] == p['name']);
+
+                          if (idx != -1) {
+                            lst[idx]['percentMoisture'] = analog;
+                            box.put("plants", lst);
+                          }
+
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
@@ -186,10 +196,11 @@ class _HomeState extends State<Home> {
                           decoration: const InputDecoration(
                             hintText: 'Enter plant name',
                           ),
-                          onSubmitted: (value) {
+                          onSubmitted: (value) async {
                             print("\n\n\n ON SUBMITTED \n\n\n");
                             if(value.trim().isEmpty) return;
                             GeneralPlant p = GeneralPlant(value);
+                            await p.updateMoisture();
                             print("\n\n\n RUNNING \n\n\n");
                             var listPlants = box.get("plants");
                             print("\n\n\n RUNNING2 \n\n\n");
