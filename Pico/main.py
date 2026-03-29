@@ -14,6 +14,7 @@ sensor = ADC(Pin(27))
 relay = Pin(12, Pin.OUT)
 
 while True:
+    
     oled.fill(0)
     oled.text("Plant 1: ", 0, 0)
 
