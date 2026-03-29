@@ -1,9 +1,11 @@
 import 'dart:core';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'general_plant.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 
@@ -93,6 +95,7 @@ class _HomeState extends State<Home> {
         height: MediaQuery.of(context).size.height * 0.8,
         child: Column(
           children: [
+            Text("My Plants", style: GoogleFonts.acme(fontSize: 50)),
             Expanded(
               child: GridView.count(
                 shrinkWrap: true,
@@ -121,11 +124,11 @@ class _HomeState extends State<Home> {
                                     size: 150.0,
                                   ),
                                   Text(p['name'],
-                                  style: TextStyle(fontSize: 50)),
+                                  style: GoogleFonts.acme(fontSize: 50)),
                                   Text(p['percentMoisture'].toString() + "%",
-                                      style: TextStyle(fontSize: 30)),
+                                      style: GoogleFonts.acme(fontSize: 30)),
                                   Text(p['lastWatered'].month.toString() + "/" + p['lastWatered'].day.toString()+ " " + p['lastWatered'].hour.toString() + ":" + p['lastWatered'].minute.toString(),
-                                      style: TextStyle(fontSize: 30)),
+                                      style: GoogleFonts.acme(fontSize: 30)),
                                   ElevatedButton(
                                       onPressed: () {
                                         var listPlants = List.from(box.get("plants") ?? []);
@@ -133,7 +136,7 @@ class _HomeState extends State<Home> {
                                         box.put("plants", listPlants);
                                         Navigator.pop(context);
                                       },
-                                      child: Text("Delete")
+                                      child: Text("Delete", style: GoogleFonts.acme())
                                   )
                                 ],
                               )
@@ -160,9 +163,9 @@ class _HomeState extends State<Home> {
                                   color: Colors.green,
                                   size: 80.0,
                                 ),
-                                Text(p['name']),
-                                Text(p['percentMoisture'].toString() + "%"),
-                                Text(p['lastWatered'].month.toString() + "/" + p['lastWatered'].day.toString()+ " " + p['lastWatered'].hour.toString() + ":" + p['lastWatered'].minute.toString())
+                                Text(p['name'], style: GoogleFonts.acme()),
+                                Text(p['percentMoisture'].toString() + "%", style: GoogleFonts.acme()),
+                                Text(p['lastWatered'].month.toString() + "/" + p['lastWatered'].day.toString()+ " " + p['lastWatered'].hour.toString() + ":" + p['lastWatered'].minute.toString(), style: GoogleFonts.acme())
                               ]
                           )
                       )
@@ -176,7 +179,7 @@ class _HomeState extends State<Home> {
                   showDialog(
                     context: context,
                       builder: (context) => AlertDialog(  // CHANGE child: to builder: (context) =>
-                        title: const Text('Add Plant'),
+                        title: Text('Add Plant', style: GoogleFonts.acme()),
                         content: TextField(
                           controller: _controller,
                           autofocus: true,
@@ -212,25 +215,6 @@ class _HomeState extends State<Home> {
 
   }
 
-  /*
-  children: <Widget>[
-        new TextField(
-          controller: _controller,
-          decoration: new InputDecoration(
-            hintText: 'Type something',
-          ),
-        ),
-        new RaisedButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              child: new AlertDialog(
-                title: new Text('What you typed'),
-                content: new Text(_controller.text),
-              ),
-            );
-          },
-   */
 }
 
 
@@ -248,9 +232,14 @@ class _ChartState extends State<Chart> {
     return SizedBox(
       height: 1000,
       child: Container(
+          padding: const EdgeInsets.all(20),
           child: Column(
               children: [
-                ]
+                Text("About US",
+                style: GoogleFonts.acme(fontSize: 50)),
+                Text("We are a group of freshman coders who are passionate about making projects to solve problems!", style: GoogleFonts.acme(fontSize: 30)),
+                Image.asset('assets/images/Kawaii_Dino_Invisi.png')
+              ]
           )
       ),
     );
