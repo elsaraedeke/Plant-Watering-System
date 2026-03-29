@@ -114,7 +114,7 @@ class _HomeState extends State<Home> {
                             builder: (context) => AlertDialog(
                               content:
                               SizedBox(
-                                height: 500,
+                                height: 700,
                               child: Column(
 
                                 children: [
